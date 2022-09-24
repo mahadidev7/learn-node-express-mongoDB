@@ -1,5 +1,6 @@
 const express = require('express')
 const fs = require('fs')
+const { rawListeners } = require('process')
 const app = express()
 const port = 5000
 app.use(express.json())
@@ -16,6 +17,7 @@ app.use(express.json())
 // })
 // ==========Demo end========
 
+// collect all blogs data
 const blogs = JSON.parse(
     fs.readFileSync(`${__dirname}/dev-data/data/blogs.json`)
 );
@@ -58,6 +60,7 @@ app.get('/api/v1/blogs/:id', (req, res)=>{
     const param_ID = req.params.id * 1;
     const blog = blogs.find(blog => blog.id === param_ID)
 
+    // if(param_ID > blog.length)
     if(!blog){
        return res.status(404).json({
         status: "failed",
@@ -66,9 +69,31 @@ app.get('/api/v1/blogs/:id', (req, res)=>{
     }
     res.status(200).json({
         status: "success",
-        data: blog
+        data: {
+            blog
+        }
     })
 })
+
+// patch - update data
+app.patch('/api/v1/blogs/:id', (req, res)=>{
+    const blog = blogs.find(el=> el.id === req.params.id * 1)
+
+    if(!blog){
+        return res.status(404).json({
+            status: "failed",
+            message: "Invalid ID"
+        })
+    }
+
+    res.status(200).json({
+        status: "success",
+        data: {
+            blog
+        }
+    })
+})
+
 
 app.listen(port, ()=>{
     console.log(`app running on port ${port}.`)
