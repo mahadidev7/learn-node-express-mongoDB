@@ -105,6 +105,9 @@ const deleteBlog = (req, res)=>{
     });
 }
 
+// === have two way start====
+// first way---
+
 // get all blogs 
 app.get('/api/v1/blogs', getAllBlogs)
 
@@ -118,7 +121,26 @@ app.get('/api/v1/blogs/:id', getblog)
 app.patch('/api/v1/blogs/:id', updateBlog)
 
 //delete single data
-app.delete('/api/v1/blogs/:id', deleteBlog);
+app.delete('/api/v1/blogs/:id', deleteBlog)
+
+// second way---
+
+app
+  .route('/api/v1/blogs')
+  .get(getAllBlogs)
+  .post(createBlog);
+
+app
+  .route('/api/v1/blogs/:id')
+  .get(getblog)
+  .patch(updateBlog)
+  .delete(deleteBlog)
+
+
+// === have two way  end====
+
+
+
 
 // createed server
 app.listen(port, ()=>{
