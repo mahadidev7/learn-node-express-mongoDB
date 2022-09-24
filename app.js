@@ -22,8 +22,7 @@ const blogs = JSON.parse(
     fs.readFileSync(`${__dirname}/dev-data/data/blogs.json`)
 );
 
-// get all blogs 
-app.get('/api/v1/blogs', (_req, res)=>{
+const getAllBlogs =  (_req, res)=>{
     res.status(200).json({
         status: 'success',
         result: blogs.length,
@@ -31,10 +30,9 @@ app.get('/api/v1/blogs', (_req, res)=>{
             blogs
         }
     })
-})
+};
 
-//post/ADD blog 
-app.post('/api/v1/blogs', (req, res)=>{
+const createBlog = (req, res)=>{
     const newID = blogs[blogs.length - 1].id + 1
     const newBlog = Object.assign({id: newID}, req.body)
 
@@ -53,10 +51,9 @@ app.post('/api/v1/blogs', (req, res)=>{
         }
     )
 
-})
+}
 
-// get single blog by params
-app.get('/api/v1/blogs/:id', (req, res)=>{
+const getblog = (req, res)=>{
     const param_ID = req.params.id * 1;
     const blog = blogs.find(blog => blog.id === param_ID)
 
@@ -73,10 +70,9 @@ app.get('/api/v1/blogs/:id', (req, res)=>{
             blog
         }
     })
-})
+}
 
-// patch - update data
-app.patch('/api/v1/blogs/:id', (req, res)=>{
+const updateBlog = (req, res)=>{
     const blog = blogs.find(el=> el.id === req.params.id * 1)
 
     if(!blog){
@@ -92,10 +88,9 @@ app.patch('/api/v1/blogs/:id', (req, res)=>{
             blog
         }
     })
-})
+}
 
-//delete single data
-app.delete('/api/v1/blogs/:id', (req, res)=>{
+const deleteBlog = (req, res)=>{
     
     if(req.params.id * 1 > blogs.length){
         return res.status(404).json({
@@ -108,7 +103,22 @@ app.delete('/api/v1/blogs/:id', (req, res)=>{
         status: "success",
         data: null
     });
-});
+}
+
+// get all blogs 
+app.get('/api/v1/blogs', getAllBlogs)
+
+//post/ADD blog 
+app.post('/api/v1/blogs', createBlog)
+
+// get single blog by params
+app.get('/api/v1/blogs/:id', getblog)
+
+// patch - update data
+app.patch('/api/v1/blogs/:id', updateBlog)
+
+//delete single data
+app.delete('/api/v1/blogs/:id', deleteBlog);
 
 // createed server
 app.listen(port, ()=>{
