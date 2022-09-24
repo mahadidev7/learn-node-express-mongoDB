@@ -2,7 +2,7 @@ const express = require('express')
 const fs = require('fs')
 const { rawListeners } = require('process')
 const app = express()
-const port = 5000
+const port = process.env.PORT || 5000
 app.use(express.json())
 
 // ==========Demo start========
@@ -94,7 +94,23 @@ app.patch('/api/v1/blogs/:id', (req, res)=>{
     })
 })
 
+//delete single data
+app.delete('/api/v1/blogs/:id', (req, res)=>{
+    
+    if(req.params.id * 1 > blogs.length){
+        return res.status(404).json({
+            status: "failed",
+            message: "Invalid delete ID"
+        });
+    }
 
+    res.status(204).json({
+        status: "success",
+        data: null
+    });
+});
+
+// createed server
 app.listen(port, ()=>{
     console.log(`app running on port ${port}.`)
 })
